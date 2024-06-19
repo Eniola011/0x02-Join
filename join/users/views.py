@@ -4,17 +4,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.auth import login
+import logging
 
 # Create your views here.
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 def homepage(request):
     """ Renders Homepage """
@@ -45,7 +47,10 @@ class RegisterView(View):
             user.is_active = False
             user.save()
             self.send_verification_email(request, user)
+            logger.info("User created and verification email sent")
             return redirect('login')
+        else:
+            logger.error("Form is invalid: %s", form.errors)
         return render(request, self.template_name, {'form': form})
 
     def send_verification_email(self, request, user):
@@ -57,11 +62,17 @@ class RegisterView(View):
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': token_generator.make_token(user),
         })
+        # to_email = form.cleaned_data.get('email')
         to_email = user.email
-        send_mail(mail_subject, message, 'yettyagbalu@gmail.com', [to_email])
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        # send_mail(mail_subject, message, 'webmaster@yourdomain.com', [to_email])
+        try:
+            email.send()
+            logger.info("Verification email sent to %s", to_email)
+        except Exception as e:
+            logger.error("Error sending email: %s", e)
 
-class ActivateView(View):
-    def get(self, request, uidb64, token):
+def activate(request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -71,7 +82,6 @@ class ActivateView(View):
         if user is not None and token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            login(request, user)
-            return redirect('home')
+            return redirect('login')
         else:
             return render(request, 'users/activation_invalid.html')
