@@ -1,22 +1,16 @@
-import smtplib
-from email.mime.text import MIMEText
+import requests
 
-smtp_server = 'smtp.mail.yahoo.com'
-smtp_port = 465
-email_user = 'yetty_agbalu@yahoo.com'
-email_password = 'Zahrah@11'
+def send_simple_message():
+    return requests.post(
+        "https://api.mailgun.net/v3/sandboxc91f0dc44721473f99911c9a2ae3f8de.mailgun.org/messages",
+        auth=("api", "488491dcaced3fe9954f8a4a714e68de-6fafb9bf-9fe95044"),
+        data={
+            "from": "Excited User <mailgun@sandboxc91f0dc44721473f99911c9a2ae3f8de.mailgun.org>",
+            "to": ["eniolaagbalu@gmail.com", "YOU@sandboxc91f0dc44721473f99911c9a2ae3f8de.mailgun.org"],
+            "subject": "Hello",
+            "text": "Testing some Mailgun awesomeness!"
+        })
 
-msg = MIMEText('This is a test email')
-msg['Subject'] = 'Test'
-msg['From'] = email_user
-msg['To'] = 'eniolaagbalu@gmail.com'
-
-try:
-    server = smtplib.SMTP(smtp_server, smtp_port)
-    server.starttls()
-    server.login(email_user, email_password)
-    server.sendmail(email_user, 'eniolaagbalu@gmail.com', msg.as_string())
-    server.quit()
-    print('Email sent successfully')
-except Exception as e:
-    print(f'Failed to send email: {e}')
+response = send_simple_message()
+print(response.status_code)
+print(response.json())

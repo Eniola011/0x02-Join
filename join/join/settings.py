@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
 ]
 
+# AUTH_USER_MODEL = 'users.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -146,14 +148,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
+    # 'users.backends.EmailBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_REQUIRED = True
-EMAIL_USE_TLS = True
+# Emailing settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'yettyagbalu@gmail.com'
 EMAIL_HOST_USER = 'yettyagbalu@gmail.com'
-EMAIL_HOST_PASSWORD = 'Zahrah@11'
+EMAIL_HOST_PASSWORD = 'pnshmqtfjvkebyqg'
 EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Logging

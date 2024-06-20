@@ -1,3 +1,5 @@
-Hi {{ user.username }},
-Please click on the link below to confirm your email and complete the registration:
+{% load static %}
+{% load i18n %}
+{% blocktrans %}Hi {{ user.username }},{% endblocktrans %}
+{% blocktrans %}Please click on the link below to confirm your email and complete the registration:{% endblocktrans %}
 http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
