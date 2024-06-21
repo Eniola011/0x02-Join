@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 # from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.views import View
 from django.template.loader import render_to_string
@@ -29,6 +29,9 @@ class CustomLoginView(LoginView):
     """ This class-based view extends Django's built-in LoginView to customize the login template. """
     template_name = 'users/login.html'
 
+    def get(self, request):
+        return super().get(request)
+
     def form_valid(self, form):
         """If the form is valid, redirect to the supplied URL."""
         redirect_to = self.get_success_url()
@@ -38,7 +41,7 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         """Return the URL to redirect to after login."""
-        return reverse_lazy('profile')
+        return reverse_lazy('users:profile')
 
 class CustomPasswordResetView(PasswordResetView):
     """ This class-based view extends Django's built-in PasswordResetView to customize the password reset process. """
@@ -62,7 +65,7 @@ class RegisterView(View):
             user.save()
             self.send_verification_email(request, user)
             logger.info("User created and verification email sent")
-            return redirect('login')
+            return redirect('users:login')
         else:
             logger.error("Form is invalid: %s", form.errors)
         return render(request, self.template_name, {'form': form})
@@ -94,7 +97,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('login')
+        return redirect('users:login')
     else:
         return render(request, 'users/activation_invalid.html')
 
@@ -106,7 +109,7 @@ def profile(request):
 class CustomLogoutView(LogoutView):
     """ Custom logout view to redirect to a logout confirmation page. """
     template_name = 'users/logout.html'
-    next_page = reverse_lazy('logout_success')
+    next_page = reverse_lazy('users:logout_success')
 
 def logout_success(request):
     """ Renders a page to confirm successful logout. """

@@ -13,22 +13,22 @@
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'users:home' %}">Home</a></li>
                 {% if user.is_authenticated %}
                 <li>
-                    <a href="{% url 'profile' %}">
+                    <a href="{% url 'users:profile' %}">
                         <i class="fas fa-user-circle"></i> {{ user.username }}
                     </a>
                 </li>
                 <li>
-                    <form method="post" action="{% url 'logout' %}">
+                    <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
                         <button type="submit">Logout</button>
                     </form>
                 </li>
                 {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'signup' %}">Signup</a></li>
+                <li><a href="{% url 'users:login' %}">Login</a></li>
+                <li><a href="{% url 'users:register' %}">Register</a></li>
                 {% endif %}
             </ul>
         </nav>

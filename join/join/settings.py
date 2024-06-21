@@ -145,10 +145,16 @@ if DEBUG:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Disable appending slashes to URLs
+APPEND_SLASH = False
+
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/profile/'
-LOGOUT_REDIRECT_URL = '/logout/'
+# Main Urls.
+HOME_URL = 'users:home'
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'users:profile'
+LOGOUT_REDIRECT_URL = 'users:logout'
 
 AUTHENTICATION_BACKENDS = [
     # 'users.backends.EmailBackend',

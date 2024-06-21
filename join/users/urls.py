@@ -2,6 +2,9 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import activate, homepage, CustomLoginView, RegisterView, CustomPasswordResetView, profile, CustomLogoutView, logout_success
 
+
+app_name = 'users'
+
 urlpatterns = [
     path('', homepage, name='home'),
     path('login/', CustomLoginView.as_view(), name='login'),

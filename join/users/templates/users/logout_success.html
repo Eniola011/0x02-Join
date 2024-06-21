@@ -12,9 +12,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'signup' %}">Signup</a></li>
+                <li><a href="{% url 'users:home' %}">Home</a></li>
+                <li><a href="{% url 'users:login' %}">Login</a></li>
+                <li><a href="{% url 'users:register' %}">Register</a></li>
             </ul>
         </nav>
     </header>
@@ -22,7 +22,7 @@
     <main>
         <div class="logout-container">
             <h1>You have been logged out successfully.</h1>
-            <p><a href="{% url 'home' %}">Return to home page</a></p>
+            <p><a href="{% url 'users:home' %}">Return to home page</a></p>
         </div>
     </main>
 

@@ -29,7 +29,7 @@
                         <h4>Create an account</h4>
                     </div>
                     <!-- Form -->
-                    <form class="px-3" method="post" action="{% url 'register' %}">
+                    <form class="px-3" method="post" action="{% url 'users:register' %}">
                         {% csrf_token %}
                         <!-- Input Box -->
                         <div class="form-input">
@@ -62,10 +62,10 @@
                             <a href="" class="btn btn-social btn-twitter">twitter</a>
                         </div>
                         <div class="text-center mb-5" style="color: #777;">Already have an account?
-                            <a class="login-link" href="{% url 'login' %}">Login here</a>
+                            <a class="login-link" href="{% url 'users:login' %}">Login here</a>
                         </div>
 			<div class="text-center mb-5" style="color: #777;">Want to go back?
-			    <a class="login-link" href="{% url 'home' %}">Home</a>
+			    <a class="login-link" href="{% url 'users:home' %}">Home</a>
 			</div>
                     </form>
                 </div>
