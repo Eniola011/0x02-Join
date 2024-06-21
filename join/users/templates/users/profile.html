@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'join.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'profile' %}">
+                        <i class="fas fa-user-circle"></i> {{ user.username }}
+                    </a>
+                </li>
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Signup</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <h1>Welcome, {{ user.username }}!</h1>
+            <div class="profile-details">
+                <img src="{% static 'images/default-profile.png' %}" alt="Profile Icon" class="profile-icon">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                <!-- Add more user details here if needed -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Website. All rights reserved.</p>
+    </footer>
+</body>
+</html>

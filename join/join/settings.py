@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-hy^n-%9m15h7q7l+6jmtwe6izrnfd^h=o0kcc#1m5b+(f54l$h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -147,6 +147,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 
+LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_REDIRECT_URL = '/logout/'
+
 AUTHENTICATION_BACKENDS = [
     # 'users.backends.EmailBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -155,10 +158,11 @@ AUTHENTICATION_BACKENDS = [
 # Emailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'yettyagbalu@gmail.com'
-EMAIL_HOST_USER = 'yettyagbalu@gmail.com'
-EMAIL_HOST_PASSWORD = 'pnshmqtfjvkebyqg'
+EMAIL_FROM = os.getenv('EMAIL_ADDRESS')
+EMAIL_HOST_USER = os.getenv('EMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# Logging
+# Default email sender
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

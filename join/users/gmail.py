@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
@@ -18,7 +19,7 @@ def get_credentials():
         else:
             print("Running OAuth flow to get new token...")
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES, redirect_uri='http://localhost:52775/')
+                'credentials.json', SCOPES, redirect_uri='http://localhost:8000/')
             auth_url, _ = flow.authorization_url(prompt='consent')
             print(f"Please go to this URL: {auth_url}")
             code = input("Enter the authorization code: ")
@@ -43,5 +44,5 @@ def send_email(to, subject, body):
     print("Email sent")
     return send_message
 
-if __name__ == "__main__":
-    send_email("eniolaagbalu@gmail.com", "Test Subject", "Test Body")
+#if __name__ == "__main__":
+    #send_email("eniolaagbalu@gmail.com", "Test Subject", "Test Body")
