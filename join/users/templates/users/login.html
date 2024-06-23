@@ -31,6 +31,9 @@
                     <!-- Form -->
                     <form class="px-3" method="post" action="{% url 'users:login' %}">
                         {% csrf_token %}
+			{% if error %}
+			    <p class="text-danger">{{ error }}</p>
+			{% endif %}
                         <!-- Input Box -->
                         <div class="form-input">
                             <span><i class="fa fa-envelope"></i></span>

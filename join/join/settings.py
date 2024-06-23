@@ -158,6 +158,7 @@ LOGOUT_REDIRECT_URL = 'users:logout'
 
 AUTHENTICATION_BACKENDS = [
     # 'users.backends.EmailBackend',
+    'users.backends.EmailBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
