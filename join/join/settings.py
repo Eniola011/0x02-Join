@@ -173,3 +173,14 @@ EMAIL_USE_TLS = True
 
 # Default email sender
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Custom email backend for password resets
+# GMAIL_BACKEND = 'users.custom_email_backend.GmailBackend'
+
+# SOCIALACCOUNT PROVIDERS
+GOOGLE_CLIENT_ID = os.getenv('CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/oauth/google/callback/'
+GITHUB_CLIENT_ID = os.getenv('CLIENTID')
+GITHUB_CLIENT_SECRET = os.getenv('CLIENTSECRET')
+GITHUB_REDIRECT_URI = 'http://127.0.0.1:8000/oauth/github/callback/'
