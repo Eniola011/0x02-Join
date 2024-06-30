@@ -19,7 +19,10 @@ from .forms import CustomUserCreationForm
 # from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.auth import login
 import logging
+import requests
 from .gmail import send_email  # Import your custom send_email function
+from urllib.parse import urlencode
+from .oauth_utils import create_or_get_user, get_google_user_info
 
 # Create your views here.
 
@@ -193,14 +196,17 @@ def logout_success(request):
 
 class GoogleLoginView(View):
     def get(self, request):
-        google_auth_url = (
-            "https://accounts.google.com/o/oauth2/auth?"
-            "response_type=code&"
-            f"client_id={settings.GOOGLE_CLIENT_ID}&"
-            f"redirect_uri={settings.GOOGLE_REDIRECT_URI}&"
-            "scope=openid%20email%20profile"
-        )
-        return redirect(google_auth_url)
+        google_auth_url = "https://accounts.google.com/o/oauth2/auth"
+        params = {
+            "client_id": settings.GOOGLE_CLIENT_ID,
+            "redirect_uri": settings.GOOGLE_REDIRECT_URI,
+            "response_type": "code",
+            "scope": "openid email profile",
+            "access_type": "offline",
+            "prompt": "consent",
+        }
+        url = f"{google_auth_url}?{urlencode(params)}"
+        return redirect(url)
 
 class GoogleCallbackView(View):
     def get(self, request):
@@ -247,13 +253,14 @@ class GoogleCallbackView(View):
 
 class GitHubLoginView(View):
     def get(self, request):
-        github_auth_url = (
-            "https://github.com/login/oauth/authorize?"
-            f"client_id={settings.GITHUB_CLIENT_ID}&"
-            f"redirect_uri={settings.GITHUB_REDIRECT_URI}&"
-            "scope=user:email"
-        )
-        return redirect(github_auth_url)
+        github_auth_url = "https://github.com/login/oauth/authorize"
+        params = {
+            "client_id": settings.GITHUB_CLIENT_ID,
+            "redirect_uri": settings.GITHUB_REDIRECT_URI,
+            "scope": "user:email",
+        }
+        url = f"{github_auth_url}?{urlencode(params)}"
+        return redirect(url)
 
 class GitHubCallbackView(View):
     def get(self, request):
