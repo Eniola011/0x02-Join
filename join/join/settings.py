@@ -42,11 +42,6 @@ INSTALLED_APPS = [
     'users',
     # Thirdparty App.
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
 ]
 
 # AUTH_USER_MODEL = 'users.CustomUser'
@@ -59,8 +54,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # allauth middleware.
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'join.urls'
@@ -157,9 +150,7 @@ LOGIN_REDIRECT_URL = 'users:profile'
 LOGOUT_REDIRECT_URL = 'users:logout'
 
 AUTHENTICATION_BACKENDS = [
-    # 'users.backends.EmailBackend',
     'users.backends.EmailBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Emailing settings
@@ -176,11 +167,3 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Custom email backend for password resets
 # GMAIL_BACKEND = 'users.custom_email_backend.GmailBackend'
-
-# SOCIALACCOUNT PROVIDERS
-GOOGLE_CLIENT_ID = os.getenv('CLIENT_ID')
-GOOGLE_CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/oauth/google/callback/'
-GITHUB_CLIENT_ID = os.getenv('CLIENTID')
-GITHUB_CLIENT_SECRET = os.getenv('CLIENTSECRET')
-GITHUB_REDIRECT_URI = 'http://127.0.0.1:8000/oauth/github/callback/'

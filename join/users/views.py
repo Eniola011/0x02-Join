@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.auth.views import PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-# from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -14,15 +13,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import account_activation_token
-# from .decorators import user_authenticated
 from .forms import CustomUserCreationForm
-# from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.auth import login
+from .gmail import send_email
 import logging
-import requests
-from .gmail import send_email  # Import your custom send_email function
-from urllib.parse import urlencode
-from .oauth_utils import create_or_get_user, get_google_user_info
 
 # Create your views here.
 
@@ -113,17 +107,6 @@ class CustomPasswordResetView(PasswordResetView):
         )
         return super().form_valid(form)
 
-class CustomPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'users/reset_done.html'
-
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'users/reset_confirm.html'
-    success_url = reverse_lazy('users:reset_complete')
-    form_class = SetPasswordForm
-
-class CustomPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = 'users/reset_complete.html'
-
 class RegisterView(View):
     template_name = 'users/register.html'
     form_class = CustomUserCreationForm
@@ -193,114 +176,3 @@ class CustomLogoutView(LogoutView):
 def logout_success(request):
     """ Renders a page to confirm successful logout. """
     return render(request, 'users/logout_success.html')
-
-class GoogleLoginView(View):
-    def get(self, request):
-        google_auth_url = "https://accounts.google.com/o/oauth2/auth"
-        params = {
-            "client_id": settings.GOOGLE_CLIENT_ID,
-            "redirect_uri": settings.GOOGLE_REDIRECT_URI,
-            "response_type": "code",
-            "scope": "openid email profile",
-            "access_type": "offline",
-            "prompt": "consent",
-        }
-        url = f"{google_auth_url}?{urlencode(params)}"
-        return redirect(url)
-
-class GoogleCallbackView(View):
-    def get(self, request):
-        code = request.GET.get('code')
-        token_url = "https://oauth2.googleapis.com/token"
-        token_data = {
-            "code": code,
-            "client_id": settings.GOOGLE_CLIENT_ID,
-            "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": settings.GOOGLE_REDIRECT_URI,
-            "grant_type": "authorization_code",
-        }
-        token_r = requests.post(token_url, data=token_data)
-        token_json = token_r.json()
-        access_token = token_json.get('access_token')
-
-        user_info = get_google_user_info(access_token)
-        email = user_info.get('email')
-        name = user_info.get('name')
-
-        user, created = create_or_get_user(email, name)
-        if created:
-            user.is_active = False
-            user.save()
-            self.send_verification_email(request, user)
-
-        if user.is_active:
-            login(request, user)
-            return redirect('/')
-        else:
-            return render(request, 'users/activation_sent.html')
-
-    def send_verification_email(self, request, user):
-        current_site = get_current_site(request)
-        mail_subject = 'Activate your account.'
-        message = render_to_string('users/activation_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        to_email = user.email
-        send_email(to_email, mail_subject, message)
-
-class GitHubLoginView(View):
-    def get(self, request):
-        github_auth_url = "https://github.com/login/oauth/authorize"
-        params = {
-            "client_id": settings.GITHUB_CLIENT_ID,
-            "redirect_uri": settings.GITHUB_REDIRECT_URI,
-            "scope": "user:email",
-        }
-        url = f"{github_auth_url}?{urlencode(params)}"
-        return redirect(url)
-
-class GitHubCallbackView(View):
-    def get(self, request):
-        code = request.GET.get('code')
-        token_url = "https://github.com/login/oauth/access_token"
-        token_data = {
-            "code": code,
-            "client_id": settings.GITHUB_CLIENT_ID,
-            "client_secret": settings.GITHUB_CLIENT_SECRET,
-            "redirect_uri": settings.GITHUB_REDIRECT_URI,
-        }
-        token_headers = {"Accept": "application/json"}
-        token_r = requests.post(token_url, data=token_data, headers=token_headers)
-        token_json = token_r.json()
-        access_token = token_json.get('access_token')
-
-        user_info = get_github_user_info(access_token)
-        email = user_info.get('email') or get_github_user_email(access_token)
-        name = user_info.get('name') or user_info.get('login')
-
-        user, created = create_or_get_user(email, name)
-        if created:
-            user.is_active = False
-            user.save()
-            self.send_verification_email(request, user)
-
-        if user.is_active:
-            login(request, user)
-            return redirect('/')
-        else:
-            return render(request, 'users/activation_sent.html')
-
-    def send_verification_email(self, request, user):
-        current_site = get_current_site(request)
-        mail_subject = 'Activate your account.'
-        message = render_to_string('users/activation_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        to_email = user.email
-        send_email(to_email, mail_subject, message)
