@@ -6,6 +6,8 @@ This project is an ALX final portfolio project to mark the end of the backend sp
 - Features
 - Prerequisites and Configuration
 - Setup Instructions
+- Setting Up Google OAuth2
+- Setting Up GitHub OAuth2
 - Usage
 - License
 
@@ -61,7 +63,7 @@ Join project is a user authentication system that allows users to sign up, log i
      pip3 install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
    ```
 
-7. Set Up OAuth2 Credentials:
+7. Set Up OAuth2 Credentials: Note this setup is for email confirmation.
    - Go to "Google Cloud Console": https://console.cloud.google.com/
    - Create a project.
    - Search and Enable "Gmail Api" which can be found in `APIs & Services` > `Library`
@@ -77,6 +79,43 @@ Join project is a user authentication system that allows users to sign up, log i
    ```
       python manage.py migrate
       python manage.py runserver
+   ```
+
+## Setting Up Google OAuth2
+For google account login and signup.
+1. Go to Google Cloud Console:  https://console.cloud.google.com/
+2. Create another project call it "social."
+3. Search for and enable the "Gmail API" and "Google People API" under `APIs & Services` > `Library`
+4. Configure the OAuth consent screen:
+   - Create an app name, input your email as the user support email.
+   - Add an app logo (optional).
+   - Skip app domain and authorised domains.
+   - Input your email as the developer contact information, save and continue
+   - move to `scopes`: add "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile" and "https://www.googleapis.com/auth/gmail.send"
+   - save and continue, input your email as test users, save and continue.
+5. Create OAuth2 credentials:
+   - Go to `APIs & Services` > `Credentials`
+   - Click on Create Credentials and select OAuth 2.0 Client IDs.
+   - Set the application type to Web application.
+   - Add http://localhost:8000/ to the Authorised redirect URIs.
+   - Skip authorised JavaScript origins.
+   - Click Create.
+   - Download the credentials JSON file.
+
+## Setting Up GitHub OAuth2
+1. Go to GitHub Developer Settings: https://github.com/settings/developers
+2. Click on `New OAuth App`
+3. Fill in the application details:
+   - Application name: Your app name.
+   - Homepage URL: http://localhost:8000/
+   - Authorization callback URL: http://localhost:8000/social/github/callback/.
+4. Click `Register application`
+5. You will get a Client ID and Client Secret. Save the "client secret" you won't see again unlike in google.
+6. Add these to your Django settings:
+   ```
+      # In settings.py or .env
+      SOCIAL_AUTH_GITHUB_KEY = 'your-client-id'
+      SOCIAL_AUTH_GITHUB_SECRET = 'your-client-secret'
    ```
 
 ## Usage
