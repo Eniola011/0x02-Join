@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Project App.
     'users',
+    'social',
     # Thirdparty App.
     'django.contrib.sites',
 ]
@@ -151,6 +152,7 @@ LOGOUT_REDIRECT_URL = 'users:logout'
 
 AUTHENTICATION_BACKENDS = [
     'users.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Emailing settings
