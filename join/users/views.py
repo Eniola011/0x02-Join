@@ -155,7 +155,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)  # Log in the user upon successful activation
+        login(request, user, backend='users.backends.EmailBackend')  # Log in the user upon successful activation
         logger.info(f"User {user.username} activated and logged in successfully.")
         return redirect('users:login')
     else:

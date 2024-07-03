@@ -25,7 +25,7 @@
                 <li>
                     <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="logout-button">Logout</button>
+                        <button type="submit">Logout</button>
                     </form>
                 </li>
                 {% else %}
