@@ -2,12 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>User Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="icon" href="{% static 'join.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 </head>
 <body>
     <header>
@@ -23,7 +25,7 @@
                 <li>
                     <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
-                        <button type="submit">Logout</button>
+                        <button type="submit" class="logout-button">Logout</button>
                     </form>
                 </li>
                 {% else %}
@@ -34,17 +36,35 @@
         </nav>
     </header>
 
-    <main>
-        <div class="profile-container">
-            <h1>Welcome, {{ user.username }}!</h1>
-            <div class="profile-details">
-                <img src="{% static 'images/default-profile.png' %}" alt="Profile Icon" class="profile-icon">
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-                <!-- Add more user details here if needed -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- IMAGE CONTAINER BEGIN -->
+            <div class="col-lg-6 col-md-6 d-none d-md-block infinity-image-container"></div>
+            <!-- IMAGE CONTAINER END -->
+
+            <!-- PROFILE CONTAINER BEGIN -->
+            <div class="col-lg-6 col-md-6 infinity-form-container">
+                <div class="col-lg-9 col-md-12 col-sm-8 col-xs-12 infinity-form">
+                    <!-- Company Logo -->
+                    <div class="text-center mb-3 mt-5">
+                        <img src="{% static 'join.png' %}" width="150px">
+                    </div>
+                    <div class="text-center mb-4">
+                        <h4>User Profile</h4>
+                    </div>
+                    <div class="profile-content px-3">
+                        <h1>Welcome, {{ user.username }}!</h1>
+                        <div class="profile-details">
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                            <!-- Add more user details here if needed -->
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- PROFILE CONTAINER END -->
         </div>
-    </main>
+    </div>
 
     <footer>
         <p>&copy; 2024 Your Website. All rights reserved.</p>

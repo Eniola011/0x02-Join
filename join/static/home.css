@@ -3,9 +3,9 @@ body {
     background: url('bg.png') center no-repeat;
     background-size: cover;
     background-position: center;
-    height: 100vh; /* Ensures full viewport height */
-    margin: 0;  /* Remove default margin */
-    padding: 0; /*  Remove default padding */
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 /* Style for the navbar */
@@ -13,23 +13,32 @@ body {
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
 }
 
+.nav-link-large {
+    font-size: 1.5em;
+    color: pink;
+}
+
+.nav-link-large:hover {
+    color: #ff69b4;
+}
+
 /* Company logo styling */
 .navbar-brand img {
-    width: 150px; /* Adjust as needed */
+    width: 150px;
 }
 
 /* Container styling */
 .container {
-    padding-top: 50px; /* Adjust the top padding as needed */
-    text-align: center; /* Center-align content in the container */
-    color: #333; /* Default text color */
+    padding-top: 50px;
+    text-align: center;
+    color: #333;
 }
 
 .container h2 {
-    font-size: 3rem; /* Large heading size */
+    font-size: 3rem;
 }
 
 .container p {
-    font-size: 1.2rem; /* Paragraph font size */
-    line-height: 1.6; /* Line height for readability */
+    font-size: 1.2rem;
+    line-height: 1.6;
 }
