@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -42,13 +43,17 @@ def google_callback(request):
     userinfo_response = requests.get(userinfo_url, headers={'Authorization': f'Bearer {access_token}'})
     userinfo = userinfo_response.json()
     
-    user, created= User.objects.get_or_create(username=userinfo['email'], defaults={'email': userinfo['email']})
+    if 'email' not in userinfo:
+        return JsonResponse({"error": "Failed to retrieve email from Google"}, status=400)
+
+    email = userinfo['email']
+    user, created = User.objects.get_or_create(username=email, defaults={'email': email})
     if created:
         user.set_unusable_password()
         user.save()
     
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('users:profile')
+    return redirect(reverse('users:profile'))
 
 def github_login(request):
     auth_url = (
@@ -80,10 +85,10 @@ def github_callback(request):
     emails = emails_response.json()
     primary_email = next(email['email'] for email in emails if email['primary'])
     
-    user, created= User.objects.get_or_create(username=primary_email, defaults={'email': primary_email})
+    user, created = User.objects.get_or_create(username=primary_email, defaults={'email': primary_email})
     if created:
         user.set_unusable_password()
         user.save()
     
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-    return redirect('users:profile')
+    return redirect(reverse('users:profile'))
