@@ -169,3 +169,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Custom email backend for password resets
 # GMAIL_BACKEND = 'users.custom_email_backend.GmailBackend'
+
+# Session Management
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1209600
+SESSION_SAVE_EVERY_REQUEST = True
